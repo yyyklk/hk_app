@@ -10,6 +10,7 @@ import openai
 import re
 import requests
 from io import BytesIO
+from datetime import datetime
 
 
 #%%
@@ -265,8 +266,11 @@ base_dir = r"\\10.11.6.12\r41200\M08242(庭宇)\hk_month"
 # 創造2024/07到2025/05的數列
 # ==========================
 def generate_month_list():
-    start = 202406
-    end = 202506
+    
+    now = datetime.now()
+
+    start = now.year * 100 + now.month-14
+    end = now.year * 100 + now.month-2
     result = []
     y, m = divmod(start, 100)##得商數餘數
     while y * 100 + m <= end:
