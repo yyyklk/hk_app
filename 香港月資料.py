@@ -269,7 +269,7 @@ def generate_month_list():
     
     now = datetime.now()
 
-    start = now.year * 100 + now.month-14
+    start = (now.year-1) * 100 + now.month-2
     end = now.year * 100 + now.month-2
     result = []
     y, m = divmod(start, 100)##得商數餘數
