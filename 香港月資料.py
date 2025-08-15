@@ -774,23 +774,22 @@ with col12:
         model = "meta-llama/llama-4-scout-17b-16e-instruct" # 模型設定
         system_prompt = f"""
         你是一位香港房市分析專家，擅長透過數據分析房市。
-        請根據提供的各項香港房市數據表格進行分析，要求：
-        1. 用繁體中文（台灣用語）回答，禁止其他語言。
+        使用提供的交易量{a}、物價指數{c}、租金指數{d}、投報率{b}四個資料表格，進行以下要求：
+        1. 用繁體中文及台灣用語回答，禁止其他語言。
         2. 回應精簡，邏輯清晰，避免冗長或籠統陳述。
         3. 必須僅引用提供的數據。
         4. 若有空值，請不要分析該時間點的數據，直接忽略。
-        5. 主要分析數據中需要被特別注意的部分。
+        5. 聚焦異常趨勢，如急升/降或相關性。
+        其中投報率retu.json表格中住宅A類面積最小，住宅E類面積最大；甲級辦公室比乙級辦公室高級。
         """ 
 
         final_prompt = f"""
-        有四個香港房市數據表格，分別為交易量{a}、投報率{b}、售價指數{c}和租金指數{d}。
-        根據表格回答問題，分五段，各段都需照順序分析交易量、售價指數、租金指數、投報率四種指標：
+        根據表格回答問題，分五段，各段都需照順序分析交易量、售價指數、租金指數、各級物件投報率四種指標：
         第一段：住宅市場分析
         第二段：辦公市場分析
         第三段：零售市場分析
         第四段：廠辦市場分析
         第五段：總結。
-        請針對表格內的資訊進行資料分析，判斷香港整體房市情形。
         必須在回答中引述提供的數據。
         """
 
@@ -818,7 +817,7 @@ with col12:
 
 
     if st.button("進行分析", key = 'hk_mon_ai_b1'):
-        result = GAI_hk_month_copy(output1.to_dict('records'), output2.to_dict('records'), output3.to_dict('records'), output4.to_dict('records'))
+        result = GAI_hk_month_copy(output1.to_json(orient='records', lines=True, force_ascii=False), output2.to_json(orient='records', lines=True, force_ascii=False), output3.to_json(orient='records', lines=True, force_ascii=False), output4.to_json(orient='records', lines=True, force_ascii=False))
         result_no_punct = re.sub(r'[^\w\u4e00-\u9fff]', '', result)  # 移除標點符號（含中英文）
         char_count = len(result_no_punct)
         st.write(result)
