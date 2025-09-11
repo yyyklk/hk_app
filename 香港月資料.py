@@ -261,27 +261,7 @@ base_dir = r"\\10.11.6.12\r41200\M08242(庭宇)\hk_month"
 #     st.error(f"無法讀取資料夾: {e}")
 #     st.stop()
 
-#%%
-# ==========================
-# 創造2024/07到2025/05的數列
-# ==========================
-def generate_month_list():
-    
-    now = datetime.now()
 
-    start = (now.year-1) * 100 + now.month-2
-    end = now.year * 100 + now.month-2
-    result = []
-    y, m = divmod(start, 100)##得商數餘數
-    while y * 100 + m <= end:
-        result.append(y * 100 + m)
-        m += 1
-        if m > 12:
-            m = 1
-            y += 1
-    return result
-
-t_option = generate_month_list()
 
 ####################################################################################################################
 
@@ -582,7 +562,26 @@ output4[['住宅(A)', '住宅(A)*', '住宅(B)', '住宅(B)*', '住宅(C)', '住
 # st.write(output4)
 
 
+#%%
+# ==========================
+# 從四個 output DataFrame 中取得最新13個月
+# ==========================
+def generate_month_list():
+    # 收集所有 DataFrame 中的年月資料
+    all_months = set()
+    
+    # 從四個 output DataFrame 中收集年月資料
+    for df in [output1, output2, output3, output4]:
+        if not df.empty and '年月' in df.columns:
+            all_months.update(df['年月'].dropna().astype(int))
+    
+    # 排序並取最新的13個月
+    sorted_months = sorted(list(all_months))
+    result = sorted_months[-13:] if len(sorted_months) >= 13 else sorted_months
+    
+    return result
 
+t_option = generate_month_list()
 
 
 
