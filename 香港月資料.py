@@ -251,19 +251,6 @@ def mul_retu(xcol, ycols, color1):
 
     st.plotly_chart(fig)
 
-# st.set_page_config(layout="wide")
-
-base_dir = r"\\10.11.6.12\r41200\M08242(庭宇)\hk_month"
-
-# try:
-#     subfolders = [f for f in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, f))]
-#     if len(subfolders) != 5:
-#         st.warning(f"找到 {len(subfolders)} 個資料夾，預期為 5 個: {subfolders}")
-#     else:
-#         st.success(f"找到的子資料夾: {subfolders}")
-# except Exception as e:
-#     st.error(f"無法讀取資料夾: {e}")
-#     st.stop()
 
 
 
@@ -568,7 +555,7 @@ output4[['住宅(A)', '住宅(A)*', '住宅(B)', '住宅(B)*', '住宅(C)', '住
 
 #%%
 # ==========================
-# 從四個 output DataFrame 中取得最新13個月
+# 從四個 output DataFrame 中取得最新14個月
 # ==========================
 def generate_month_list():
     # 收集所有 DataFrame 中的年月資料
@@ -579,9 +566,9 @@ def generate_month_list():
         if not df.empty and '年月' in df.columns:
             all_months.update(df['年月'].dropna().astype(int))
     
-    # 排序並取最新的13個月
+    # 排序並取最新的14個月
     sorted_months = sorted(list(all_months))
-    result = sorted_months[-13:] if len(sorted_months) >= 13 else sorted_months
+    result = sorted_months[-14:] if len(sorted_months) >= 14 else sorted_months
     
     return result
 
@@ -602,7 +589,7 @@ with col11:
         "",
             options=t_option,
             key="hk_mo_ti_st", 
-            index=0
+            index=1
     )
         
     with col2:
