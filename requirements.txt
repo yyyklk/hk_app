@@ -2,7 +2,8 @@ streamlit
 pandas
 numpy
 plotly
-openai==0.28.0
+openai
 requests
 xlrd
 datetime
+openpyxl
