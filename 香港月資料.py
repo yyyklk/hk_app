@@ -87,7 +87,8 @@ def monthly_analysis(data_manager, chart_utils, ui_components):
             st.error('時間設定錯誤')
     
     with col2:
-        ui_components.create_ai_analysis_section(monthly_data, 'monthly')
+        # ui_components.create_ai_analysis_section(monthly_data, 'monthly')
+        st.error('功能開發中')
 
 
 #%%未檢查
@@ -119,7 +120,8 @@ def quarterly_analysis(data_manager, chart_utils, ui_components):
             st.error('時間設定錯誤')
     
     with col2:
-        ui_components.create_ai_analysis_section(quarterly_data, 'quarterly')
+        # ui_components.create_ai_analysis_section(quarterly_data, 'quarterly')
+        st.error('功能開發中')
 
     
 
