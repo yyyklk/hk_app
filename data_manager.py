@@ -83,10 +83,10 @@ class DataManager:
         """載入總體資料"""
         with st.spinner('載入總體資料中...'):
             return {
-                'gdp': _self._process_gdp(),
-                'une': _self._process_une(),
-                'tra': _self._process_tra()
-                # ,'int': _self._process_int()
+                'GDP': _self._process_gdp(),
+                '失業率': _self._process_une(),
+                '訪港旅遊人數': _self._process_tra()
+                ,'利率': _self._process_int()
             }
         
 
@@ -134,6 +134,7 @@ class DataManager:
             gdp_df = gdp_df[['年', '季', '年季', '值']]
             gdp_df.columns = ['年', '季', '年季', 'GDP年增率']
             gdp_df['GDP年增率'] = gdp_df['GDP年增率']/100
+            result_df = gdp_df[['年', '季', '年季', 'GDP年增率']]
 
         else:
             print(f"錯誤：{gdp_response.status_code} - {gdp_response.text}")
@@ -214,7 +215,7 @@ class DataManager:
             une_df = une_df[['年', '季', '年季', '值_男', '值_女', '值']]
             une_df.columns = ['年', '季', '年季', '失業率（男性）', '失業率（女性）', '失業率（合計）']
             une_df[['失業率（男性）', '失業率（女性）', '失業率（合計）']] = une_df[['失業率（男性）', '失業率（女性）', '失業率（合計）']]/100
-
+            result_df = une_df[['年', '季', '年季', '失業率（男性）', '失業率（女性）', '失業率（合計）']]
 
         else:
             print(f"錯誤：{une_response.status_code} - {une_response.text}")
@@ -287,7 +288,7 @@ class DataManager:
                 '訪港旅客(不含中國內地)':'sum', 
                 '訪港旅客(總數)': 'sum'
             }).reset_index()
-            tra_df = tra_df[['年', '季', '年季', '訪港旅客(中國內地)', '訪港旅客(不含中國內地)', '訪港旅客(總數)']]
+            result_df = tra_df[['年', '季', '年季', '訪港旅客(中國內地)', '訪港旅客(不含中國內地)', '訪港旅客(總數)']]
 
             
 
@@ -297,7 +298,41 @@ class DataManager:
 
         return result_df
     
+    def _process_int(self):
+        """處理利率資料"""
+        result_df = pd.DataFrame()
+        
+        for _, url in DATA_SOURCES['int'].items():
+            df = self._download_excel(url, sheet_name=0, header=14)
 
+            if df is None:
+                continue
+            
+
+            df = df[['Unnamed: 0', 'Unnamed: 2', 'Unnamed: 4']]
+            df.columns = ['年', '月', 'interest_rate']
+            df = df.dropna(how='all')
+            df['年'] = df['年'].ffill()
+            df['月'] = df['月'].str.replace('月', '')
+            df['年'] = df['年'].astype(int)
+            df['月'] = df['月'].astype(int)
+            df = df.reset_index(drop=True)
+            df['季'] = ((df['月'] - 1) // 3 + 1).astype(int)
+            df = df[['年', '季', '月', 'interest_rate']]
+
+                    # 先依「年」、「季」排序，確保每季的第一個月在最前面
+            df_sorted = df.sort_values(['年', '季', '月'])
+            
+            # 以「年」、「季」分組，取每組的第一筆（即每季的第一個月）
+            df_sorted = df_sorted.groupby(['年', '季'], as_index=False).first()
+            
+            # 只保留需要的欄位
+            df_sorted = df_sorted[['年', '季', 'interest_rate']]
+            df_sorted['年季'] = df_sorted['年'].astype(int).astype(str) + 'Q' + df_sorted['季'].astype(int).astype(str)
+            result_df = df_sorted[['年', '季', '年季', 'interest_rate']]
+            result_df.columns = ['年', '季', '年季', '利率']
+            result_df['利率'] = result_df['利率']/100
+        return result_df
 
 
 

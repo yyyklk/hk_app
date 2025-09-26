@@ -214,7 +214,7 @@ class UIComponents:
         
         temperature = st.number_input(
             "修改輸出內容多樣性(數字越小越穩定)", 
-            min_value=0.0, max_value=1.0, value=0.5, step=0.1
+            min_value=0.0, max_value=1.0, value=0.7, step=0.1
         )
         
         if st.button("進行分析"):

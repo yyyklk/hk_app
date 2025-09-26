@@ -52,8 +52,9 @@ def main():
         quarterly_analysis(data_manager, chart_utils, ui_components) ######
 
 
+
     else:
-        st.write("功能開發中...")
+        gdp_analysis(data_manager, chart_utils, ui_components) ######
 
 
 #%%未檢查
@@ -119,6 +120,35 @@ def quarterly_analysis(data_manager, chart_utils, ui_components):
     
     with col2:
         ui_components.create_ai_analysis_section(quarterly_data, 'quarterly')
+
+    
+
+
+def gdp_analysis(data_manager, chart_utils, ui_components):
+    st.title("香港總體經濟資料")
+    # 載入季資料
+    macro_data = data_manager.load_macro_data()
+    mac = ['GDP', '利率', '失業率', '訪港旅遊人數']
+    for i in mac:
+        st.subheader(f'{i}資料表', divider = 'rainbow')
+        df = macro_data[i]
+        st.dataframe(df)
+
+def gdp_analysis_sup(data_manager, chart_utils, ui_components):
+    st.title("香港總體經濟資料")
+    # 載入季資料
+    macro_data = data_manager.load_macro_data()
+
+    df_gdp = macro_data['GDP']
+    df_int = macro_data['利率']
+    df_une = macro_data['失業率']
+    df_tra = macro_data['訪港旅遊人數']
+
+
+
+
+    
+
 
 if __name__ == "__main__":
     main()

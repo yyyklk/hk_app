@@ -25,8 +25,12 @@ DATA_SOURCES = {
         '辦公' : r'https://www.rvd.gov.hk/doc/en/statistics/private_office.xls', 
         '零售' : r'https://www.rvd.gov.hk/doc/en/statistics/private_commercial.xls', 
         '廠辦' : r'https://www.rvd.gov.hk/doc/en/statistics/private_flatted_factories.xls'
+    }, 
+    'int':{
+        '香港' : r'https://www.hkma.gov.hk/media/eng/doc/market-data-and-statistics/monthly-statistical-bulletin/T070301.xls'
     }
 }
+
 
 # 分析選項
 ANALYSIS_OPTIONS = ('香港月資料分析', '香港季資料分析', '香港總體經濟指標')
