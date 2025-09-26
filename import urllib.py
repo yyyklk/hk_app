@@ -4,6 +4,9 @@ import json
 import re
 import pandas as pd
 import numpy as np
+
+#%%
+from data_manager import DataManager
 #%%統一
 url1 = "https://www.censtatd.gov.hk/api/post.php"
 
@@ -26,6 +29,8 @@ url1 = "https://www.censtatd.gov.hk/api/post.php"
 #         }
 #     }
 # }
+
+url2 = 'https://www.hkma.gov.hk/media/eng/doc/market-data-and-statistics/monthly-statistical-bulletin/T070301.xls'
 # %%
 #gdp
 parameters1 ={
@@ -104,8 +109,15 @@ if gdp_response.status_code == 200:
 			]
     gdp_df = pd.DataFrame(gdp_data_list)    
     gdp_df['季度'] = gdp_df['季度'].astype(int)
-    une_df = gdp_df.sort_values(by=['季度'], ascending = True).reset_index(drop=True)  
-    
+    gdp_df = gdp_df.sort_values(by=['季度'], ascending = True).reset_index(drop=True)  
+    gdp_df['年'] = gdp_df['季度'] // 100  # 整數除法，提取年份 (202202 // 100 = 2022)
+    gdp_df['年'] = gdp_df['年'].astype(int)
+    gdp_df['月'] = gdp_df['季度'] % 100   # 模運算，提取月份 (202202 % 100 = 02)
+    gdp_df['季'] = np.round((gdp_df['月'] + 1) / 3).astype(int)
+    gdp_df['年季'] = gdp_df['年'].astype(int).astype(str) + 'Q' + gdp_df['季'].astype(int).astype(str)
+    gdp_df = gdp_df[['年', '季', '年季', '值']]
+    gdp_df.columns = ['年', '季', '年季', 'GDP年增率']
+    gdp_df['GDP年增率'] = gdp_df['GDP年增率']/100
 
 else:
     print(f"錯誤：{gdp_response.status_code} - {gdp_response.text}")
@@ -150,8 +162,17 @@ if une_response.status_code == 200:
     une_df['季度'] = une_df['季度'].astype(int)
     une_df = une_df.sort_values(by=['季度'], ascending = True).reset_index(drop=True)
     
-    a_df = pd.merge(une_df_m, une_df_f, on=['季度'], how='inner', suffixes=('_男', '_女'))
-    une_df = pd.merge(a_df, une_df, on=['季度'], how='inner')
+    a_df = pd.merge(une_df_m, une_df_f, on=['季度'], how='outer', suffixes=('_男', '_女'))
+    une_df = pd.merge(a_df, une_df, on=['季度'], how='outer')
+    une_df['年'] = une_df['季度'] // 100  # 整數除法，提取年份 (202202 // 100 = 2022)
+    une_df['年'] = une_df['年'].astype(int)
+    une_df['月'] = une_df['季度'] % 100   # 模運算，提取月份 (202202 % 100 = 02)
+    une_df['季'] = np.round((une_df['月'] + 1) / 3).astype(int)
+    une_df['年季'] = une_df['年'].astype(int).astype(str) + 'Q' + une_df['季'].astype(int).astype(str)
+    une_df = une_df[['年', '季', '年季', '值_男', '值_女', '值']]
+    une_df.columns = ['年', '季', '年季', '失業率（男性）', '失業率（女性）', '失業率（合計）']
+    une_df[['失業率（男性）', '失業率（女性）', '失業率（合計）']] = une_df[['失業率（男性）', '失業率（女性）', '失業率（合計）']]/100
+
     
 
 else:
@@ -185,20 +206,21 @@ if tra_response.status_code == 200:
     tra_df_o['季度'] = tra_df_o['季度'].astype(int)
     tra_df_o = tra_df_o.sort_values(by=['季度'], ascending = True).reset_index(drop=True)  
     
-    tra_df = pd.merge(tra_df_c, tra_df_o, on=['季度'], how='inner', suffixes=('_中國', '_總計'))
+    tra_df = pd.merge(tra_df_c, tra_df_o, on=['季度'], how='outer', suffixes=('_中國', '_總計'))
     tra_df['訪港旅客(不含中國內地)'] = tra_df['值_總計'] - tra_df['值_中國']
     tra_df = tra_df[['季度', '值_中國', '訪港旅客(不含中國內地)', '值_總計']]
-    tra_df.columns = [['年月', '訪港旅客(中國內地)', '訪港旅客(不含中國內地)', '訪港旅客(總數)']]
+    tra_df.columns = ['年月', '訪港旅客(中國內地)', '訪港旅客(不含中國內地)', '訪港旅客(總數)']
     tra_df['年'] = tra_df['年月'] // 100  # 整數除法，提取年份 (202202 // 100 = 2022)
     tra_df['年'] = tra_df['年'].astype(int)
     tra_df['月'] = tra_df['年月'] % 100   # 模運算，提取月份 (202202 % 100 = 02)
     tra_df['季'] = np.round((tra_df['月'] + 1) / 3).astype(int)
-    # tra_df = tra_df.groupby(['年', '季']).agg({
-	# 	'訪港旅客(中國內地)':'sum', 
-	# 	'訪港旅客(不含中國內地)':'sum', 
-	# 	'訪港旅客(總數)': 'sum'
-	# }).reset_index()
-    # tra_df = tra_df[['年', '季', '訪港旅客(中國內地)', '訪港旅客(不含中國內地)', '訪港旅客(總數)']]
+    tra_df['年季'] = tra_df['年'].astype(int).astype(str) + 'Q' + tra_df['季'].astype(int).astype(str)
+    tra_df = tra_df.groupby(['年', '季', '年季']).agg({
+		'訪港旅客(中國內地)':'sum', 
+		'訪港旅客(不含中國內地)':'sum', 
+		'訪港旅客(總數)': 'sum'
+	}).reset_index()
+    tra_df = tra_df[['年', '季', '年季', '訪港旅客(中國內地)', '訪港旅客(不含中國內地)', '訪港旅客(總數)']]
 
     
 
