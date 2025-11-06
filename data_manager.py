@@ -422,13 +422,13 @@ class DataManager:
         for key, url in DATA_SOURCES['return'].items():
             df = None
             if (key =='住宅') :
-                df = self._download_excel(url,sheet_name='Monthly(Domestic) 按月(住宅)',header=6)
+                df = self._download_excel(url,sheet_name='Monthly(Domestic) 按月(住宅)',header=5)
                 df = df[['年','Unnamed: 5','Unnamed: 8','Unnamed: 11', 'Unnamed: 14','Unnamed: 17','Unnamed: 20']]
                 df.columns = ['年','月','住宅(A)','住宅(B)','住宅(C)','住宅(D)','住宅(E)']
 
                 
             elif (key =='其他'):
-                df = self._download_excel(url,sheet_name='Monthly(Non-domestic) 按月(非住宅)',header=8)
+                df = self._download_excel(url,sheet_name='Monthly(Non-domestic) 按月(非住宅)',header=6)
                 df = df[['年','Unnamed: 5', 'Unnamed: 8','Unnamed: 11', 'Unnamed: 14','Unnamed: 17']]
                 df.columns = ['年','月','辦公(甲級)','辦公(乙級)','廠辦','零售']
 
@@ -453,11 +453,11 @@ class DataManager:
         for key, url in DATA_SOURCES['return'].items():
             df = None
             if (key =='住宅') :
-                df = self._download_excel(url,sheet_name='Quarterly(Domestic) 按季(住宅)',header=6)
+                df = self._download_excel(url,sheet_name='Quarterly(Domestic) 按季(住宅)',header=5)
                 df = df[['年','月', 'Unnamed: 8','Unnamed: 11', 'Unnamed: 14','Unnamed: 17','Unnamed: 20']]
                 df.columns = ['年','月','住宅(A)','住宅(B)','住宅(C)','住宅(D)','住宅(E)']
             elif (key =='其他'):
-                df = self._download_excel(url,sheet_name='Quarterly(Non-domestic) 按季(非住宅)',header=8)
+                df = self._download_excel(url,sheet_name='Quarterly(Non-domestic) 按季(非住宅)',header=6)
                 df = df[['年','月', 'Unnamed: 8','Unnamed: 11', 'Unnamed: 14','Unnamed: 17']]
                 df.columns = ['年','月','辦公(甲級)','辦公(乙級)','廠辦','零售']
 
@@ -482,19 +482,22 @@ class DataManager:
         result_df = pd.DataFrame()
         for key, url in DATA_SOURCES['sold'].items():
             df = None
-            df = self._download_excel(url,sheet_name=0,header=5)
+            
             if (key =='住宅') :
+                df = self._download_excel(url,sheet_name=0,header=6)
                 df = df[['年','Unnamed: 5', 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11','Unnamed: 12',
                             'Unnamed: 14','Unnamed: 15', 'Unnamed: 17','Unnamed: 18', 'Unnamed: 20','Unnamed: 21',
                             'Unnamed: 29']]
                 df.columns = ['年','月','住宅(A)','住宅(A)*','住宅(B)','住宅(B)*','住宅(C)','住宅(C)*','住宅(D)','住宅(D)*','住宅(E)','住宅(E)*','住宅(平均)']
                 
             if (key =='辦公'):
+                df = self._download_excel(url,sheet_name=0,header=5)
                 df = df[['年','Unnamed: 5', 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11','Unnamed: 12',
                             'Unnamed: 14','Unnamed: 15', 'Unnamed: 17']]
                 df.columns = ['年','月','辦公(甲級)','辦公(甲級)*','辦公(乙級)','辦公(乙級)*','辦公(丙級)','辦公(丙級)*','辦公(平均)']
                 
             if (key == '零售') | (key == '廠辦'):
+                df = self._download_excel(url,sheet_name=0,header=5)
                 df = df[['年','Unnamed: 5','Unnamed: 14']]
                 df.columns = ['年','月','零售(平均)'] if key =='零售' else ['年','月','廠辦(平均)']
 
@@ -524,19 +527,22 @@ class DataManager:
         result_df = pd.DataFrame()
         for key, url in DATA_SOURCES['sold'].items():
             df = None
-            df = self._download_excel(url,sheet_name=1,header=5)
+            
             if (key =='住宅') :
+                df = self._download_excel(url,sheet_name=1,header=6)
                 df = df[['年', '月', 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11','Unnamed: 12',
                             'Unnamed: 14','Unnamed: 15', 'Unnamed: 17','Unnamed: 18', 'Unnamed: 20','Unnamed: 21',
                             'Unnamed: 29']]
                 df.columns = ['年','月','住宅(A)','住宅(A)*','住宅(B)','住宅(B)*','住宅(C)','住宅(C)*','住宅(D)','住宅(D)*','住宅(E)','住宅(E)*','住宅(平均)']
                 
             if (key =='辦公'):
+                df = self._download_excel(url,sheet_name=1,header=5)
                 df = df[['年','月', 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11','Unnamed: 12',
                             'Unnamed: 14','Unnamed: 15', 'Unnamed: 17']]
                 df.columns = ['年','月','辦公(甲級)','辦公(甲級)*','辦公(乙級)','辦公(乙級)*','辦公(丙級)','辦公(丙級)*','辦公(平均)']
                 
             if (key == '零售') | (key == '廠辦'):
+                df = self._download_excel(url,sheet_name=1,header=5)
                 df = df[['年','月','Unnamed: 14']]
                 df.columns = ['年','月','零售(平均)'] if key =='零售' else ['年','月','廠辦(平均)']
 
@@ -562,19 +568,22 @@ class DataManager:
         result_df = pd.DataFrame()
         for key, url in DATA_SOURCES['rent'].items():
             df = None
-            df = self._download_excel(url,sheet_name=0,header=5)
+            
             if (key =='住宅') :
+                df = self._download_excel(url,sheet_name=0,header=6)
                 df = df[['年','Unnamed: 5', 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11','Unnamed: 12',
                             'Unnamed: 14','Unnamed: 15', 'Unnamed: 17','Unnamed: 18', 'Unnamed: 20','Unnamed: 21',
                             'Unnamed: 29']]
                 df.columns = ['年','月','住宅(A)','住宅(A)*','住宅(B)','住宅(B)*','住宅(C)','住宅(C)*','住宅(D)','住宅(D)*','住宅(E)','住宅(E)*','住宅(平均)']
                 
             if (key =='辦公'):
+                df = self._download_excel(url,sheet_name=0,header=5)
                 df = df[['年','Unnamed: 5', 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11','Unnamed: 12',
                             'Unnamed: 14','Unnamed: 15', 'Unnamed: 17']]
                 df.columns = ['年','月','辦公(甲級)','辦公(甲級)*','辦公(乙級)','辦公(乙級)*','辦公(丙級)','辦公(丙級)*','辦公(平均)']
                 
             if (key == '零售') | (key == '廠辦'):
+                df = self._download_excel(url,sheet_name=0,header=5)
                 df = df[['年','Unnamed: 5','Unnamed: 9']]
                 df.columns = ['年','月','零售(平均)'] if key =='零售' else ['年','月','廠辦(平均)']
 
@@ -605,19 +614,22 @@ class DataManager:
         result_df = pd.DataFrame()
         for key, url in DATA_SOURCES['rent'].items():
             df = None
-            df = self._download_excel(url,sheet_name=1,header=5)
+            
             if (key =='住宅') :
+                df = self._download_excel(url,sheet_name=1,header=6)
                 df = df[['年', '月', 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11','Unnamed: 12',
                             'Unnamed: 14','Unnamed: 15', 'Unnamed: 17','Unnamed: 18', 'Unnamed: 20','Unnamed: 21',
                             'Unnamed: 29']]
                 df.columns = ['年','月','住宅(A)','住宅(A)*','住宅(B)','住宅(B)*','住宅(C)','住宅(C)*','住宅(D)','住宅(D)*','住宅(E)','住宅(E)*','住宅(平均)']
                 
             if (key =='辦公'):
+                df = self._download_excel(url,sheet_name=1,header=5)
                 df = df[['年','月', 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11','Unnamed: 12',
                             'Unnamed: 14','Unnamed: 15', 'Unnamed: 17']]
                 df.columns = ['年','月','辦公(甲級)','辦公(甲級)*','辦公(乙級)','辦公(乙級)*','辦公(丙級)','辦公(丙級)*','辦公(平均)']
                 
             if (key == '零售') | (key == '廠辦'):
+                df = self._download_excel(url,sheet_name=1,header=5)
                 df = df[['年','月','Unnamed: 9']]
                 df.columns = ['年','月','零售(平均)'] if key =='零售' else ['年','月','廠辦(平均)']
 
