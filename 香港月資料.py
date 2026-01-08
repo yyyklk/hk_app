@@ -60,7 +60,7 @@ def main():
 #%%未檢查
 def monthly_analysis(data_manager, chart_utils, ui_components):
     st.title("香港月資料分析")
-    col1, col2 = st.columns([5, 1])
+    col1, col2 = st.columns([8, 1])
     
     with col1:
         # 載入月資料
@@ -94,7 +94,7 @@ def monthly_analysis(data_manager, chart_utils, ui_components):
 #%%未檢查
 def quarterly_analysis(data_manager, chart_utils, ui_components):
     st.title("香港季資料分析")
-    col1, col2 = st.columns([5, 1])
+    col1, col2 = st.columns([8, 1])
     
     with col1:
         # 載入季資料
