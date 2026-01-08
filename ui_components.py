@@ -204,79 +204,79 @@ class UIComponents:
                 filtered[data_type] = df
         return filtered
     
-    def create_ai_analysis_section(self, data, analysis_type):
-        """建立 AI 分析區塊"""
-        t = '月' if analysis_type == 'monthly' else '季'
-        st.header(f"香港{t}資料AI摘要", divider='rainbow')
+    # def create_ai_analysis_section(self, data, analysis_type):
+    #     """建立 AI 分析區塊"""
+    #     t = '月' if analysis_type == 'monthly' else '季'
+    #     st.header(f"香港{t}資料AI摘要", divider='rainbow')
         
-        with st.expander('輸入api金鑰', expanded=False):
-            api_key = st.text_input('', max_chars=60)
+    #     with st.expander('輸入api金鑰', expanded=False):
+    #         api_key = st.text_input('', max_chars=60)
         
-        temperature = st.number_input(
-            "修改輸出內容多樣性(數字越小越穩定)", 
-            min_value=0.0, max_value=1.0, value=0.7, step=0.1
-        )
+    #     temperature = st.number_input(
+    #         "修改輸出內容多樣性(數字越小越穩定)", 
+    #         min_value=0.0, max_value=1.0, value=0.7, step=0.1
+    #     )
         
-        if st.button("進行分析"):
-            if api_key:
-                result = self._perform_ai_analysis(data, api_key, temperature)
-                self._display_ai_result(result)
-            else:
-                st.error("請輸入 API 金鑰")
+    #     if st.button("進行分析"):
+    #         if api_key:
+    #             result = self._perform_ai_analysis(data, api_key, temperature)
+    #             self._display_ai_result(result)
+    #         else:
+    #             st.error("請輸入 API 金鑰")
     
-    def _perform_ai_analysis(self, data, api_key, temperature):
-        """執行 AI 分析"""
-        try:
-            client = OpenAI(
-                api_key=api_key,
-                base_url="https://api.groq.com/openai/v1"
-            )
+    # def _perform_ai_analysis(self, data, api_key, temperature):
+    #     """執行 AI 分析"""
+    #     try:
+    #         client = OpenAI(
+    #             api_key=api_key,
+    #             base_url="https://api.groq.com/openai/v1"
+    #         )
             
-            # 準備資料
-            data_json = {
-                'trade': data['trade'].to_json(orient='records', lines=True, force_ascii=False),
-                'return': data['return'].to_json(orient='records', lines=True, force_ascii=False),
-                'sold': data['sold'].to_json(orient='records', lines=True, force_ascii=False),
-                'rent': data['rent'].to_json(orient='records', lines=True, force_ascii=False)
-            }
+    #         # 準備資料
+    #         data_json = {
+    #             'trade': data['trade'].to_json(orient='records', lines=True, force_ascii=False),
+    #             'return': data['return'].to_json(orient='records', lines=True, force_ascii=False),
+    #             'sold': data['sold'].to_json(orient='records', lines=True, force_ascii=False),
+    #             'rent': data['rent'].to_json(orient='records', lines=True, force_ascii=False)
+    #         }
             
-            system_prompt = """
-            你是一位香港房市分析專家，擅長透過數據分析房市。
-            使用提供的交易量、物價指數、租金指數、投報率四個資料表格，進行以下要求：
-            1. 用繁體中文及台灣用語回答，禁止其他語言。
-            2. 回應精簡，邏輯清晰，避免冗長或籠統陳述。
-            3. 必須僅引用提供的數據。
-            4. 若有空值，請不要分析該時間點的數據，直接忽略。
-            5. 聚焦異常趨勢，如急升/降或相關性。
-            """
+    #         system_prompt = """
+    #         你是一位香港房市分析專家，擅長透過數據分析房市。
+    #         使用提供的交易量、物價指數、租金指數、投報率四個資料表格，進行以下要求：
+    #         1. 用繁體中文及台灣用語回答，禁止其他語言。
+    #         2. 回應精簡，邏輯清晰，避免冗長或籠統陳述。
+    #         3. 必須僅引用提供的數據。
+    #         4. 若有空值，請不要分析該時間點的數據，直接忽略。
+    #         5. 聚焦異常趨勢，如急升/降或相關性。
+    #         """
             
-            user_prompt = """
-            根據表格回答問題，分五段，各段都需照順序分析交易量、售價指數、租金指數、各級物件投報率四種指標：
-            第一段：住宅市場分析
-            第二段：辦公市場分析
-            第三段：零售市場分析
-            第四段：廠辦市場分析
-            第五段：總結。
-            必須在回答中引述提供的數據。
-            """
+    #         user_prompt = """
+    #         根據表格回答問題，分五段，各段都需照順序分析交易量、售價指數、租金指數、各級物件投報率四種指標：
+    #         第一段：住宅市場分析
+    #         第二段：辦公市場分析
+    #         第三段：零售市場分析
+    #         第四段：廠辦市場分析
+    #         第五段：總結。
+    #         必須在回答中引述提供的數據。
+    #         """
             
-            response = client.chat.completions.create(
-                model="meta-llama/llama-4-scout-17b-16e-instruct",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=temperature
-            )
+    #         response = client.chat.completions.create(
+    #             model="meta-llama/llama-4-scout-17b-16e-instruct",
+    #             messages=[
+    #                 {"role": "system", "content": system_prompt},
+    #                 {"role": "user", "content": user_prompt}
+    #             ],
+    #             temperature=temperature
+    #         )
             
-            return response.choices[0].message.content
+    #         return response.choices[0].message.content
             
-        except Exception as e:
-            return f"生成回應時發生錯誤: {str(e)}"
+    #     except Exception as e:
+    #         return f"生成回應時發生錯誤: {str(e)}"
     
-    def _display_ai_result(self, result):
-        """顯示 AI 分析結果"""
-        result_no_punct = re.sub(r'[^\w\u4e00-\u9fff]', '', result)
-        char_count = len(result_no_punct)
-        st.write(result)
-        st.info(f"AI 分析結果字數（不含標點符號）：{char_count} 字")
+    # def _display_ai_result(self, result):
+    #     """顯示 AI 分析結果"""
+    #     result_no_punct = re.sub(r'[^\w\u4e00-\u9fff]', '', result)
+    #     char_count = len(result_no_punct)
+    #     st.write(result)
+    #     st.info(f"AI 分析結果字數（不含標點符號）：{char_count} 字")
