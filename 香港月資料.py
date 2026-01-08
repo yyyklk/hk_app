@@ -60,7 +60,7 @@ def main():
 #%%未檢查
 def monthly_analysis(data_manager, chart_utils, ui_components):
     st.title("香港月資料分析")
-    col1, col2 = st.columns([3, 2])
+    col1, col2 = st.columns([5, 1])
     
     with col1:
         # 載入月資料
@@ -88,13 +88,13 @@ def monthly_analysis(data_manager, chart_utils, ui_components):
     
     with col2:
         # ui_components.create_ai_analysis_section(monthly_data, 'monthly')
-        st.error('功能開發中')
+        st.link_button("前往LibreChat", "https://10.11.152.248:3000/login")
 
 
 #%%未檢查
 def quarterly_analysis(data_manager, chart_utils, ui_components):
     st.title("香港季資料分析")
-    col1, col2 = st.columns([3, 2])
+    col1, col2 = st.columns([5, 1])
     
     with col1:
         # 載入季資料
@@ -121,7 +121,7 @@ def quarterly_analysis(data_manager, chart_utils, ui_components):
     
     with col2:
         # ui_components.create_ai_analysis_section(quarterly_data, 'quarterly')
-        st.error('功能開發中')
+        st.link_button("前往LibreChat", "https://10.11.152.248:3000/login")
 
     
 
